@@ -1,19 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize AOS
+    if (typeof AOS !== 'undefined') {
+        AOS.init({ duration: 800, once: true });
+    }
+
     // Navigation toggle
     const navToggle = document.querySelector('.nav-toggle');
     const navMenu = document.querySelector('.nav-menu');
-    navToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-    });
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    }
 
     // Dark mode toggle
     const darkModeToggle = document.getElementById('dark-mode-toggle');
-    darkModeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-    });
-    if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        });
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
     }
 
     // Global search
@@ -35,47 +44,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalDescription = document.getElementById('modal-description');
     const modalClose = document.querySelector('.modal-close');
     const learnMoreButtons = document.querySelectorAll('.learn-more');
-    learnMoreButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            modalTitle.textContent = button.parentElement.dataset.modalTitle;
-            modalDescription.textContent = button.parentElement.dataset.modalDescription;
-            modal.style.display = 'flex';
+    if (modal && modalTitle && modalDescription && modalClose) {
+        learnMoreButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                modalTitle.textContent = button.parentElement.dataset.modalTitle;
+                modalDescription.textContent = button.parentElement.dataset.modalDescription;
+                modal.style.display = 'flex';
+            });
         });
-    });
-    modalClose.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) {
+        modalClose.addEventListener('click', () => {
             modal.style.display = 'none';
-        }
-    });
+        });
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
 
     // Login modal
     const loginModal = document.getElementById('login-modal');
     const loginBtn = document.getElementById('login-btn');
     const loginForm = document.getElementById('login-form');
-    const loginClose = loginModal.querySelector('.modal-close');
-    if (loginBtn) {
+    const loginClose = loginModal?.querySelector('.modal-close');
+    if (loginBtn && loginModal && loginForm && loginClose) {
         loginBtn.addEventListener('click', () => {
             loginModal.style.display = 'flex';
         });
-    }
-    if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             alert('Login successful! Redirecting to dashboard...');
             loginModal.style.display = 'none';
         });
-    }
-    loginClose.addEventListener('click', () => {
-        loginModal.style.display = 'none';
-    });
-    window.addEventListener('click', (e) => {
-        if (e.target === loginModal) {
+        loginClose.addEventListener('click', () => {
             loginModal.style.display = 'none';
-        }
-    });
+        });
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+    }
 
     // Rate button
     const rateBtn = document.getElementById('rate-btn');
@@ -131,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showStory = (index) => {
         stories.forEach((story, i) => {
             story.classList.toggle('active', i === index);
-            dots[i].classList.toggle('active', i === index);
+            dots[i]?.classList.toggle('active', i === index);
         });
     };
     window.goToStory = (index) => {
@@ -227,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contactForm.nextElementSibling.style.display = 'block';
             contactForm.reset();
         });
-    }
+    });
 
     // Share buttons
     const shareButtons = document.querySelectorAll('.share-btn');
@@ -257,43 +266,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Back to top
     const backToTop = document.getElementById('back-to-top');
-    window.addEventListener('scroll', () => {
-        backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
-    });
-    backToTop.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    if (backToTop) {
+        window.addEventListener('scroll', () => {
+            backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+        });
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 
     // Particle animation
     const canvas = document.getElementById('particle-canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const particles = [];
-    for (let i = 0; i < 100; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            radius: Math.random() * 2 + 1,
-            vx: Math.random() * 2 - 1,
-            vy: Math.random() * 2 - 1
-        });
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const particles = [];
+        for (let i = 0; i < 100; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2 + 1,
+                vx: Math.random() * 2 - 1,
+                vy: Math.random() * 2 - 1
+            });
+        }
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
     }
-    function animateParticles() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-            if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-            ctx.fill();
-        });
-        requestAnimationFrame(animateParticles);
-    }
-    animateParticles();
 
     // Global map animation
     const globalMapCanvas = document.getElementById('global-map');
