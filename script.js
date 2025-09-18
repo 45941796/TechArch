@@ -16,6 +16,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('dark-mode');
     }
 
+    // Global search
+    const globalSearch = document.getElementById('global-search');
+    if (globalSearch) {
+        globalSearch.addEventListener('input', () => {
+            const search = globalSearch.value.toLowerCase();
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                const text = section.textContent.toLowerCase();
+                section.style.display = text.includes(search) || !search ? 'block' : 'none';
+            });
+        });
+    }
+
     // Modal functionality
     const modal = document.getElementById('modal');
     const modalTitle = document.getElementById('modal-title');
@@ -38,22 +51,60 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // CTA popup
-    const ctaPopup = document.getElementById('cta-popup');
-    setTimeout(() => {
-        ctaPopup.style.display = 'flex';
-    }, 5000);
-    window.closePopup = () => {
-        ctaPopup.style.display = 'none';
-    };
-
-    // Feedback popup
-    const feedbackForm = document.getElementById('feedback-form');
-    if (feedbackForm) {
-        feedbackForm.addEventListener('submit', (e) => {
+    // Login modal
+    const loginModal = document.getElementById('login-modal');
+    const loginBtn = document.getElementById('login-btn');
+    const loginForm = document.getElementById('login-form');
+    const loginClose = loginModal.querySelector('.modal-close');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+        });
+    }
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            alert('Thank you for your feedback!');
-            document.getElementById('feedback-popup').style.display = 'none';
+            alert('Login successful! Redirecting to dashboard...');
+            loginModal.style.display = 'none';
+        });
+    }
+    loginClose.addEventListener('click', () => {
+        loginModal.style.display = 'none';
+    });
+    window.addEventListener('click', (e) => {
+        if (e.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+    });
+
+    // Rate button
+    const rateBtn = document.getElementById('rate-btn');
+    if (rateBtn) {
+        rateBtn.addEventListener('click', () => {
+            const feedbackModal = document.createElement('div');
+            feedbackModal.className = 'modal';
+            feedbackModal.innerHTML = `
+                <div class="modal-content">
+                    <span class="modal-close" role="button" aria-label="Close feedback modal">&times;</span>
+                    <h3>Rate Our Site</h3>
+                    <form id="feedback-form">
+                        <label for="rating">Rating (1-5):</label>
+                        <input type="number" id="rating" min="1" max="5" required aria-label="Rate site from 1 to 5">
+                        <button type="submit" class="btn" aria-label="Submit feedback">Submit</button>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(feedbackModal);
+            feedbackModal.style.display = 'flex';
+            const feedbackForm = feedbackModal.querySelector('#feedback-form');
+            feedbackForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Thank you for your feedback!');
+                feedbackModal.remove();
+            });
+            feedbackModal.querySelector('.modal-close').addEventListener('click', () => {
+                feedbackModal.remove();
+            });
         });
     }
 
@@ -345,18 +396,22 @@ document.addEventListener('DOMContentLoaded', () => {
             chatbotMessages.style.display = chatbotMessages.style.display === 'block' ? 'none' : 'block';
             if (chatbotMessages.style.display === 'block' && !chatbotMessages.querySelector('input')) {
                 chatbotMessages.innerHTML = `
-                    <p>Welcome to TechArch! How can I help?</p>
+                    <p>Welcome to TechArch! Ask about our programs!</p>
                     <input type="text" placeholder="Type your question..." aria-label="Chatbot input">
                 `;
                 const input = chatbotMessages.querySelector('input');
                 input.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter' && input.value.trim()) {
                         const question = input.value.trim().toLowerCase();
-                        let response = 'Thanks for your question! Contact info@techarch.org for more details.';
-                        if (question.includes('training')) {
-                            response = 'Check out our free courses on coding, AI, and more at <a href="training.html">Training</a>!';
-                        } else if (question.includes('job')) {
-                            response = 'Explore job opportunities at <a href="jobs.html">Jobs</a>!';
+                        let response = 'Thanks for your question! Email info@techarch.org for more details.';
+                        if (question.includes('training') || question.includes('course')) {
+                            response = 'Explore our free courses on coding, AI, data annotation, and agri-tech at <a href="training.html">Training</a>!';
+                        } else if (question.includes('job') || question.includes('career')) {
+                            response = 'Check out global job opportunities at <a href="jobs.html">Jobs</a>!';
+                        } else if (question.includes('event') || question.includes('summit')) {
+                            response = 'Join our Global Tech Summit (Oct 10, 2025) or AI Job Fair (Nov 15, 2025) listed on the <a href="index.html#events">Home</a> page!';
+                        } else if (question.includes('login') || question.includes('dashboard')) {
+                            response = 'Click the Login button in the navbar to access your dashboard!';
                         }
                         chatbotMessages.innerHTML += `<p><strong>You:</strong> ${input.value}</p><p><strong>Bot:</strong> ${response}</p>`;
                         input.value = '';
