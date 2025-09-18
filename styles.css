@@ -28,6 +28,11 @@ header {
     height: 100%;
     object-fit: cover;
     opacity: 0.3;
+    transform: translateY(0);
+    transition: transform 0.5s ease;
+}
+.hero-video:hover {
+    transform: translateY(-10px);
 }
 nav {
     display: flex;
@@ -42,6 +47,12 @@ nav {
     font-size: 24px;
     font-weight: 600;
 }
+#global-search {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 150px;
+}
 .nav-menu {
     display: flex;
     list-style: none;
@@ -49,14 +60,17 @@ nav {
     padding: 0;
 }
 .nav-menu li {
-    margin: 0 15px;
+    margin: 0 10px;
 }
-.nav-menu a {
+.nav-menu a, .nav-menu button {
     color: #fff;
     text-decoration: none;
     font-size: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
-.nav-menu a:hover {
+.nav-menu a:hover, .nav-menu button:hover {
     text-decoration: underline;
 }
 .nav-toggle {
@@ -69,80 +83,81 @@ nav {
 }
 .hero {
     text-align: center;
-    padding: 100px 20px;
+    padding: 80px 20px;
 }
 .hero h1 {
     font-family: 'Poppins', sans-serif;
-    font-size: 48px;
+    font-size: 40px;
     margin: 0;
 }
 .hero p {
-    font-size: 20px;
-    margin: 20px 0;
+    font-size: 18px;
+    margin: 15px 0;
 }
 .btn {
     background: #10b981;
     color: #fff;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .btn:hover {
     background: #059669;
 }
 section {
-    padding: 60px 20px;
+    padding: 50px 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
 .quiz, .stats, .mission, .vision, .preview, .events, .team, .social-feed, .training, .jobs, .stories, .blog, .contact, .partners, .about, .blog-post {
     text-align: center;
 }
-.quiz form, .contact form, .newsletter {
+.quiz form, .contact form, .newsletter, .login-form {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-width: 400px;
+    max-width: 350px;
     margin: 20px auto;
 }
-.quiz select, .contact input, .contact textarea, .newsletter input {
-    padding: 10px;
+.quiz select, .contact input, .contact textarea, .newsletter input, .login-form input {
+    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
-.course-search, #faq-search {
+.course-search, #faq-search, #global-search {
     width: 100%;
-    max-width: 400px;
-    margin: 20px auto;
+    max-width: 350px;
+    margin: 15px auto;
 }
 .course-filter {
     display: flex;
     gap: 10px;
     justify-content: center;
-    margin: 20px 0;
+    margin: 15px 0;
 }
 .stat-box, .event, .team-member, .feed-post, .course, .job, .story, .post, .faq-item, .cert, .partner {
     background: #fff;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 15px;
+    border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     margin: 10px;
 }
 .stat-box, .course, .job, .story, .post, .partner {
-    flex: 1 1 300px;
+    flex: 1 1 280px;
 }
 .event-grid, .team-grid, .feed-grid, .course-grid, .job-grid, .blog-grid, .cert-grid, .partner-carousel {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 15px;
     justify-content: center;
 }
 .story-slider {
     position: relative;
-    max-width: 600px;
+    max-width: 550px;
     margin: 0 auto;
 }
 .story {
@@ -152,11 +167,11 @@ section {
     display: block;
 }
 .slider-nav {
-    margin-top: 20px;
+    margin-top: 15px;
 }
 .dot {
-    height: 10px;
-    width: 10px;
+    height: 8px;
+    width: 8px;
     background: #ccc;
     border-radius: 50%;
     display: inline-block;
@@ -169,8 +184,8 @@ section {
 .progress-bar {
     background: #e0e0e0;
     border-radius: 5px;
-    height: 20px;
-    margin: 20px 0;
+    height: 15px;
+    margin: 15px 0;
 }
 .progress {
     background: #10b981;
@@ -184,14 +199,27 @@ section {
     scroll-snap-type: x mandatory;
 }
 .partner img {
-    max-width: 150px;
+    max-width: 120px;
     height: auto;
+    object-fit: contain;
 }
 .rating {
     color: #f59e0b;
-    font-size: 20px;
+    font-size: 18px;
 }
-.popup, .modal {
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #1e3a8a;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 8px;
+    z-index: 1000;
+}
+.modal {
     display: none;
     position: fixed;
     top: 0;
@@ -203,35 +231,28 @@ section {
     align-items: center;
     z-index: 1000;
 }
-.popup form {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 400px;
-    text-align: center;
-}
 .modal-content {
     background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 400px;
+    padding: 15px;
+    border-radius: 8px;
+    max-width: 350px;
     position: relative;
 }
 .modal-close {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 8px;
+    right: 8px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 18px;
 }
 #chatbot {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 50px;
+    right: 15px;
     background: #10b981;
     color: #fff;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -240,28 +261,28 @@ section {
 }
 #chatbot-messages {
     position: fixed;
-    bottom: 80px;
-    right: 20px;
+    bottom: 100px;
+    right: 15px;
     background: #fff;
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 10px;
     display: none;
-    max-width: 300px;
+    max-width: 280px;
 }
 #chatbot-messages input {
     width: 100%;
-    padding: 10px;
+    padding: 8px;
     margin-top: 10px;
 }
 #back-to-top {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
+    bottom: 50px;
+    left: 15px;
     background: #10b981;
     color: #fff;
     border: none;
     border-radius: 5px;
-    padding: 10px;
+    padding: 8px;
     cursor: pointer;
     display: none;
 }
@@ -273,11 +294,16 @@ section {
 footer {
     background: #1e3a8a;
     color: #fff;
-    padding: 20px;
+    padding: 15px;
     text-align: center;
 }
 footer a {
     color: #10b981;
+}
+iframe {
+    max-width: 100%;
+    height: 200px;
+    border: none;
 }
 @media (max-width: 768px) {
     .nav-menu {
@@ -288,7 +314,7 @@ footer a {
         left: 0;
         width: 100%;
         background: #1e3a8a;
-        padding: 20px;
+        padding: 15px;
     }
     .nav-menu.active {
         display: flex;
@@ -297,27 +323,54 @@ footer a {
         display: block;
     }
     .hero h1 {
-        font-size: 32px;
+        font-size: 28px;
     }
     .hero p {
         font-size: 16px;
     }
+    .bottom-nav {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+@media (max-width: 480px) and (orientation: portrait) {
+    .hero h1 {
+        font-size: 24px;
+    }
+    .hero p {
+        font-size: 14px;
+    }
+    .stat-box, .course, .job, .story, .post, .partner, .event, .team-member, .feed-post {
+        flex: 1 1 100%;
+        margin: 5px;
+    }
+    nav {
+        flex-wrap: wrap;
+    }
+    #global-search {
+        width: 100%;
+        margin: 10px 0;
+    }
 }
 @media (prefers-color-scheme: dark) {
     body {
-        background: #1a202c;
-        color: #e2e8f0;
+        background: #1f2937;
+        color: #f3f4f6;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
     .stat-box, .event, .team-member, .feed-post, .course, .job, .story, .post, .faq-item, .cert, .partner {
-        background: #2d3748;
-        color: #e2e8f0;
+        background: #374151;
+        color: #f3f4f6;
     }
-    .modal-content, .popup form {
-        background: #2d3748;
-        color: #e2e8f0;
+    .modal-content {
+        background: #374151;
+        color: #f3f4f6;
     }
     #chatbot-messages {
-        background: #2d3748;
-        color: #e2e8f0;
+        background: #374151;
+        color: #f3f4f6;
+    }
+    .bottom-nav {
+        background: #374151;
     }
 }
