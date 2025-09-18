@@ -1,0 +1,135 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TechArch's blog shares insights on tech trends, careers, and global opportunities.">
+    <meta name="keywords" content="TechArch, tech blog, AI, coding, careers, East Africa, global tech">
+    <title>Blog - TechArch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css?v=1.0"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css?v=1.0"/>
+    <link rel="stylesheet" href="styles.css?v=1.0">
+</head>
+<body>
+    <canvas id="particle-canvas" aria-hidden="true"></canvas>
+    <div id="modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <span class="modal-close" role="button" aria-label="Close modal">&times;</span>
+            <h3 id="modal-title"></h3>
+            <p id="modal-description"></p>
+        </div>
+    </div>
+    <header class="animate__animated animate__fadeInDown">
+        <nav>
+            <div class="logo">TechArch</div>
+            <button class="nav-toggle" aria-label="Toggle navigation">☰</button>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="training.html">Training</a></li>
+                <li><a href="jobs.html">Jobs</a></li>
+                <li><a href="stories.html">Stories</a></li>
+                <li><a href="partners.html">Partners</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+            <button id="dark-mode-toggle" class="btn" aria-label="Toggle dark mode">Dark Mode</button>
+        </nav>
+    </header>
+    <section class="blog" data-aos="fade-up">
+        <h1>Tech Insights for a Global Future</h1>
+        <p>Stay informed on tech trends and career tips.</p>
+        <div class="blog-filter">
+            <label for="blog-filter-category">Category:</label>
+            <select id="blog-filter-category">
+                <option value="">All</option>
+                <option value="ai">AI</option>
+                <option value="career">Career Tips</option>
+                <option value="agri">Agri-Tech</option>
+                <option value="marketing">Marketing</option>
+            </select>
+        </div>
+        <div class="blog-grid">
+            <div class="post" data-aos="fade-up" data-modal-title="Top 5 Tech Skills for 2025" data-modal-description="AI, cybersecurity, and cloud computing are booming globally." data-category="ai">
+                <h3>Top 5 Tech Skills for 2025</h3>
+                <p>AI, cybersecurity, and more—get ahead.</p>
+                <button class="btn learn-more" aria-label="Learn more about Top 5 Tech Skills">Learn More</button>
+                <a href="blog-post1.html" class="btn animate__animated animate__bounce" aria-label="Read Top 5 Tech Skills post">Read More</a>
+            </div>
+            <div class="post" data-aos="fade-up" data-aos-delay="100" data-modal-title="Why Agri-Tech is the Future" data-modal-description="Blending farming with innovation for global impact." data-category="agri">
+                <h3>Why Agri-Tech is the Future</h3>
+                <p>Blending farming with innovation.</p>
+                <button class="btn learn-more" aria-label="Learn more about Agri-Tech">Learn More</button>
+                <a href="blog-post2.html" class="btn animate__animated animate__bounce" aria-label="Read Agri-Tech post">Read More</a>
+            </div>
+            <div class="post" data-aos="fade-up" data-aos-delay="200" data-modal-title="Youth Entrepreneurship Tips" data-modal-description="Start your startup with our insights." data-category="career">
+                <h3>Youth Entrepreneurship Tips</h3>
+                <p>Start your startup with our insights.</p>
+                <button class="btn learn-more" aria-label="Learn more about Entrepreneurship Tips">Learn More</button>
+                <a href="blog-post3.html" class="btn animate__animated animate__bounce" aria-label="Read Entrepreneurship Tips post">Read More</a>
+            </div>
+            <div class="post" data-aos="fade-up" data-aos-delay="300" data-modal-title="How AI Can Solve Water Challenges" data-modal-description="AI-driven solutions for global environmental issues." data-category="ai">
+                <h3>How AI Can Solve Water Challenges</h3>
+                <p>AI-driven solutions for water issues.</p>
+                <button class="btn learn-more" aria-label="Learn more about AI and Water Challenges">Learn More</button>
+                <a href="blog-post4.html" class="btn animate__animated animate__bounce" aria-label="Read AI and Water Challenges post">Read More</a>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <h3>Stay Updated</h3>
+        <form class="newsletter" role="form" aria-label="Newsletter signup">
+            <input type="email" placeholder="Enter your email" required aria-label="Email address">
+            <button type="submit" class="btn" aria-label="Subscribe to newsletter">Subscribe</button>
+        </form>
+        <div class="newsletter-success">Subscribed successfully! ✓</div>
+        <p>Led by Walter Koech & Abdi Hirisi, CEOs | Registered in Minnesota, USA | Nairobi, Kenya | +254714392009 | info@techarch.org</p>
+        <p>Follow us on <a href="https://x.com/TechArch">X</a> | <a href="https://instagram.com/TechArch">Instagram</a> | <a href="https://linkedin.com/company/TechArch">LinkedIn</a></p>
+        <p>© 2025 TechArch. All rights reserved.</p>
+    </footer>
+    <div id="chatbot" role="button" aria-label="Open chatbot">💬</div>
+    <div id="chatbot-messages" role="region" aria-live="polite"></div>
+    <button id="back-to-top" aria-label="Back to top">↑</button>
+    <script src="script.js?v=1.0"></script>
+</body>
+</html>
